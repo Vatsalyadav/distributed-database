@@ -2,6 +2,7 @@ package reverseEngineering;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -36,10 +37,13 @@ public class DrawERD {
 
     private void readMetadata(String tableName) {
         List<String> tableMetadata = mTableMetadata.get(tableName);
+        System.out.println(tableMetadata);
         String[] columnDesc;
         for (String readFile : tableMetadata) {
             columnDesc = readFile.split("[|]");
-            erd += "|  " + columnDesc[0] + " " + columnDesc[1] + " ".repeat(30 - (columnDesc[0] + columnDesc[1]).length()) + "|\n";
+            System.out.println("columnDesc: "+Arrays.toString(columnDesc));
+            if (columnDesc.length>2)
+                erd += "|  " + columnDesc[0] + " " + columnDesc[1] + " ".repeat(30 - (columnDesc[0] + columnDesc[1]).length()) + "|\n";
         }
         erd += "-".repeat(35);
     }

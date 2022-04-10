@@ -135,6 +135,7 @@ public class DumpGenerator {
         String out = "";
         for (String attribute : attributes) {
             String[] columns = attribute.split("\\|", -1);
+            if (columns.length>2)
             for (int i = 0; i < columns.length; i++) {
                 out = out + " " + columns[0] + " " + columns[1] + " ";
                 if (columns[2].equals("true")) {
