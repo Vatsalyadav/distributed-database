@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-{"events":[{"timeStamp":"2022-04-10T14:55:03.735933800Z","condition":"","numberOfRowsChanges":0,"columns":"","values":"","onDatabase":"","onTable":"","event":"create","crashReport":"Database created"}]}
-=======
 {
   "events": [
     {

@@ -1,9 +1,6 @@
 package utils;
 
-<<<<<<< HEAD
 import java.io.*;
-=======
->>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -25,10 +22,6 @@ public class UtilsFileHandler {
     }
 
     public static List<String> readFile(String filepath) throws IOException {
-<<<<<<< HEAD
-
-=======
->>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
         BufferedReader br = null;
         try {
             br = new BufferedReader(new FileReader(filepath));

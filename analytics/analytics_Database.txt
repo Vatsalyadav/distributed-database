@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 user aman submitted 4 queries for  running on Virtual Machine1
-=======
-user qiwei submitted 2 queries for University running on Virtual Machine one 
->>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
