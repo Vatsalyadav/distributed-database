@@ -21,7 +21,10 @@ import query.manager.QueryHandler;
 import query.manager.SchemaHandler;
 import query.response.Response;
 import query.response.ResponseType;
+import query.transaction.Transaction;
 import utils.UtilsMetadata;
+
+import static query.transaction.Transaction.autoCommit;
 
 public class WriteQueries {
 	public static String dbName = "";
@@ -77,7 +80,11 @@ public class WriteQueries {
 				System.out.println("Database is not selected");
 			}
 			else {
-				boolean success=queryParserExecutor.processQuery(query);
+				boolean success= true;
+				if(!((query.equalsIgnoreCase("start transaction;") || query.equalsIgnoreCase("start transaction") || (query.equalsIgnoreCase("commit;") || query.equalsIgnoreCase("commit"))))){
+					success=queryParserExecutor.processQuery(query);
+
+				}
 				if(success) {
 
 					setDataAndExecuteQuery(query);
@@ -96,96 +103,110 @@ public class WriteQueries {
 
 	}
 
-	private Response setDataAndExecuteQuery(String query) throws IOException, ParseException {
+	private Response setDataAndExecuteQuery(String query) throws IOException, ParseException, InvalidQueryException {
+		System.out.println("here");
 		String[] arrayStr={};
 		int[] arrayInt={};
 
 		Response response = null;
-		if (this.queryParserExecutor.isCreDbQuery(query)) {
-
-			CreateDatabaseProcessor createDatabaseProc = this.queryParserExecutor.getCreateDatabaseProc();
-			CreateSchema createSchema = new CreateSchema(createDatabaseProc.getDbName().toLowerCase());
-			response = SchemaHandler.executeSchemaCreateQuery(createSchema);
-			printResponse(response.getResponseType().toString(), response.getDescription());
-			Instant end = Instant.now();
-
-			logsParameters=new LogsParameters("create",String.valueOf(Duration.between(this.startTime, end)),query,this.username,String.valueOf(this.startTime),"create", "","", "",this.dbName,"",0,takeNoOfTables(this.dbName),takeTableName(this.dbName).toArray(new String[0]),takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(),response.getResponseType().toString(),response.getDescription());
-			Loger log = new Loger();
-			log.wirteLogs(logsParameters);
-
-		}
-		else if (query.toLowerCase().contains("create")) {
-			CreateQueryProcessor createQueryProc = this.queryParserExecutor.getCreateQueryProcessor();
-			ArrayList<String> clmnNull = new ArrayList<>();
-			for(int kk=0; kk<=createQueryProc.getColumns().size();kk++){
-				             clmnNull.add("false");
+		if (query.equalsIgnoreCase("start transaction;") || query.equalsIgnoreCase("start transaction")) {
+			autoCommit = false;
+			printResponse(ResponseType.SUCCESS.toString(), "Transaction Successfully started...");
+		} else if ((query.equalsIgnoreCase("commit;") || query.equalsIgnoreCase("commit")) && !autoCommit) {
+			autoCommit = true;
+			for (String transactionQuery : Transaction.commitTransaction()){
+				queryParserExecutor.processQuery(transactionQuery);
+				setDataAndExecuteQuery(transactionQuery);
 			}
-			CreateQuery createQuery = new CreateQuery(createQueryProc.getColumns(), createQueryProc.getDatatype(), clmnNull,
-					createQueryProc.getTableName().toLowerCase(), this.dbName, createQueryProc.getPrimaryKey(),
-					createQueryProc.getForeginKey(), createQueryProc.getRefTable(), createQueryProc.getRefId());
-
-			response = QueryHandler.executeQuery(createQuery, SqlType.CREATE);
-			printResponse(response.getResponseType().toString(), response.getDescription());
-			Instant end = Instant.now();
-			logsParameters=new LogsParameters("create",String.valueOf(Duration.between(this.startTime, end)),query,this.username,String.valueOf(this.startTime),"create", "",createQueryProc.getColumns().toString(), "",this.dbName,createQueryProc.getTableName().toLowerCase(),1,takeNoOfTables(this.dbName),takeTableName(this.dbName).toArray(new String[0]),takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(),response.getResponseType().toString(),response.getDescription());
-			Loger log = new Loger();
-			log.wirteLogs(logsParameters);
-
+			Transaction.refreshTransactionQueryList();
+			printResponse(ResponseType.SUCCESS.toString(), "Transaction Successfully committed...");
 		}
 
-		else if (query.toLowerCase().contains("select")) {
-			SelectQueryProcessor selectQueryProc = this.queryParserExecutor.getSelectQueryProcessor();
-			SelectQuery selectQuery = new SelectQuery(selectQueryProc.getColumns(), selectQueryProc.getTableName().toLowerCase(),
-					this.dbName, selectQueryProc.getColumnInWhere(), selectQueryProc.getWhereCond(),
-					selectQueryProc.getFactor(), selectQueryProc.isAllColumn());
+		if (!(query.equalsIgnoreCase("commit;") || query.equalsIgnoreCase("commit")) && autoCommit) {
+			if (this.queryParserExecutor.isCreDbQuery(query)) {
 
-			response = QueryHandler.executeQuery(selectQuery, SqlType.SELECT);
-			printResponse(response.getResponseType().toString(), response.getDescription());
-			Instant end = Instant.now();
-			logsParameters=new LogsParameters("select",String.valueOf(Duration.between(this.startTime, end)),query,this.username,String.valueOf(this.startTime),"select", selectQueryProc.getWhereCond().toString(),selectQueryProc.getColumns().toString(), selectQueryProc.getFactor(),this.dbName,selectQueryProc.getTableName().toLowerCase(),0,takeNoOfTables(this.dbName),takeTableName(this.dbName).toArray(new String[0]),takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(),response.getResponseType().toString(),response.getDescription());
-			Loger log = new Loger();
-			log.wirteLogs(logsParameters);
+				CreateDatabaseProcessor createDatabaseProc = this.queryParserExecutor.getCreateDatabaseProc();
+				CreateSchema createSchema = new CreateSchema(createDatabaseProc.getDbName().toLowerCase());
+				response = SchemaHandler.executeSchemaCreateQuery(createSchema);
+				printResponse(response.getResponseType().toString(), response.getDescription());
+				Instant end = Instant.now();
 
-		}
-		else if (query.toLowerCase().contains("insert")) {
-			InsertQueryProcessor insertQueryProc = this.queryParserExecutor.getInsertQueryProcessor();
-			InsertQuery insertQuery = new InsertQuery(insertQueryProc.getColumns(),insertQueryProc.getTableName().toLowerCase(),this.dbName,insertQueryProc.getValues());
+				logsParameters = new LogsParameters("create", String.valueOf(Duration.between(this.startTime, end)), query, this.username, String.valueOf(this.startTime), "create", "", "", "", this.dbName, "", 0, takeNoOfTables(this.dbName), takeTableName(this.dbName).toArray(new String[0]), takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(), response.getResponseType().toString(), response.getDescription());
+				Loger log = new Loger();
+				log.wirteLogs(logsParameters);
 
-			response = QueryHandler.executeQuery(insertQuery, SqlType.INSERT);
-			printResponse(response.getResponseType().toString(), response.getDescription());
-			Instant end = Instant.now();
-			logsParameters=new LogsParameters("insert",String.valueOf(Duration.between(this.startTime, end)),query,this.username,String.valueOf(this.startTime),"insert", "",insertQueryProc.getColumns().toString(), insertQueryProc.getValues().toString(),this.dbName,insertQueryProc.getTableName().toLowerCase(),1,takeNoOfTables(this.dbName),takeTableName(this.dbName).toArray(new String[0]),takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(),response.getResponseType().toString(),response.getDescription());
-			Loger log = new Loger();
-			log.wirteLogs(logsParameters);
+			} else if (query.toLowerCase().contains("create")) {
+				CreateQueryProcessor createQueryProc = this.queryParserExecutor.getCreateQueryProcessor();
+				ArrayList<String> clmnNull = new ArrayList<>();
+				for (int kk = 0; kk <= createQueryProc.getColumns().size(); kk++) {
+					clmnNull.add("false");
+				}
+				CreateQuery createQuery = new CreateQuery(createQueryProc.getColumns(), createQueryProc.getDatatype(), clmnNull,
+						createQueryProc.getTableName().toLowerCase(), this.dbName, createQueryProc.getPrimaryKey(),
+						createQueryProc.getForeginKey(), createQueryProc.getRefTable(), createQueryProc.getRefId());
 
-		}
-		else if (query.toLowerCase().contains("delete")) {
-			DeleteQueryProcessor delQueryProc = this.queryParserExecutor.getDeleteQueryProcessor();
+				response = QueryHandler.executeQuery(createQuery, SqlType.CREATE);
+				printResponse(response.getResponseType().toString(), response.getDescription());
+				Instant end = Instant.now();
+				logsParameters = new LogsParameters("create", String.valueOf(Duration.between(this.startTime, end)), query, this.username, String.valueOf(this.startTime), "create", "", createQueryProc.getColumns().toString(), "", this.dbName, createQueryProc.getTableName().toLowerCase(), 1, takeNoOfTables(this.dbName), takeTableName(this.dbName).toArray(new String[0]), takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(), response.getResponseType().toString(), response.getDescription());
+				Loger log = new Loger();
+				log.wirteLogs(logsParameters);
 
-			DeleteQuery delQuery = new DeleteQuery(delQueryProc.getTableName().toLowerCase(),this.dbName,delQueryProc.getColumns(),WhereCond.EQUALS,delQueryProc.getValue());
+			} else if (query.toLowerCase().contains("select")) {
+				SelectQueryProcessor selectQueryProc = this.queryParserExecutor.getSelectQueryProcessor();
+				SelectQuery selectQuery = new SelectQuery(selectQueryProc.getColumns(), selectQueryProc.getTableName().toLowerCase(),
+						this.dbName, selectQueryProc.getColumnInWhere(), selectQueryProc.getWhereCond(),
+						selectQueryProc.getFactor(), selectQueryProc.isAllColumn());
 
-			response = QueryHandler.executeQuery(delQuery, SqlType.DELETE);
-			printResponse(response.getResponseType().toString(), response.getDescription());
-			Instant end = Instant.now();
-			logsParameters=new LogsParameters("delete",String.valueOf(Duration.between(this.startTime, end)),query,this.username,String.valueOf(this.startTime),"delete", WhereCond.EQUALS.toString(),delQueryProc.getColumns(),delQueryProc.getValue(),this.dbName,delQueryProc.getTableName().toLowerCase(),1,takeNoOfTables(this.dbName),takeTableName(this.dbName).toArray(new String[0]),takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(),response.getResponseType().toString(),response.getDescription());
-			Loger log = new Loger();
-			log.wirteLogs(logsParameters);
+				response = QueryHandler.executeQuery(selectQuery, SqlType.SELECT);
+				printResponse(response.getResponseType().toString(), response.getDescription());
+				Instant end = Instant.now();
+				logsParameters = new LogsParameters("select", String.valueOf(Duration.between(this.startTime, end)), query, this.username, String.valueOf(this.startTime), "select", selectQueryProc.getWhereCond().toString(), selectQueryProc.getColumns().toString(), selectQueryProc.getFactor(), this.dbName, selectQueryProc.getTableName().toLowerCase(), 0, takeNoOfTables(this.dbName), takeTableName(this.dbName).toArray(new String[0]), takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(), response.getResponseType().toString(), response.getDescription());
+				Loger log = new Loger();
+				log.wirteLogs(logsParameters);
 
-		}
-		else if (query.toLowerCase().contains("use")) {
-			UseDatabaseQueryProc useDatabaseQueryProc = this.queryParserExecutor.getUseDatabaseQueryProc();
-			CreateSchema createSchema = new CreateSchema(useDatabaseQueryProc.getDbName().toLowerCase());
-			response = SchemaHandler.checkSchemaQuery(createSchema);
-			if (response.getResponseType().toString().equals(ResponseType.SUCCESS.toString())) {
-				this.dbName = useDatabaseQueryProc.getDbName().toLowerCase();
-				this.dbCreated = true;
+			} else if (query.toLowerCase().contains("insert")) {
+				InsertQueryProcessor insertQueryProc = this.queryParserExecutor.getInsertQueryProcessor();
+				InsertQuery insertQuery = new InsertQuery(insertQueryProc.getColumns(), insertQueryProc.getTableName().toLowerCase(), this.dbName, insertQueryProc.getValues());
+
+				response = QueryHandler.executeQuery(insertQuery, SqlType.INSERT);
+				printResponse(response.getResponseType().toString(), response.getDescription());
+				Instant end = Instant.now();
+				logsParameters = new LogsParameters("insert", String.valueOf(Duration.between(this.startTime, end)), query, this.username, String.valueOf(this.startTime), "insert", "", insertQueryProc.getColumns().toString(), insertQueryProc.getValues().toString(), this.dbName, insertQueryProc.getTableName().toLowerCase(), 1, takeNoOfTables(this.dbName), takeTableName(this.dbName).toArray(new String[0]), takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(), response.getResponseType().toString(), response.getDescription());
+				Loger log = new Loger();
+				log.wirteLogs(logsParameters);
+
+			} else if (query.toLowerCase().contains("delete")) {
+				DeleteQueryProcessor delQueryProc = this.queryParserExecutor.getDeleteQueryProcessor();
+
+				DeleteQuery delQuery = new DeleteQuery(delQueryProc.getTableName().toLowerCase(), this.dbName, delQueryProc.getColumns(), WhereCond.EQUALS, delQueryProc.getValue());
+
+				response = QueryHandler.executeQuery(delQuery, SqlType.DELETE);
+				printResponse(response.getResponseType().toString(), response.getDescription());
+				Instant end = Instant.now();
+				logsParameters = new LogsParameters("delete", String.valueOf(Duration.between(this.startTime, end)), query, this.username, String.valueOf(this.startTime), "delete", WhereCond.EQUALS.toString(), delQueryProc.getColumns(), delQueryProc.getValue(), this.dbName, delQueryProc.getTableName().toLowerCase(), 1, takeNoOfTables(this.dbName), takeTableName(this.dbName).toArray(new String[0]), takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(), response.getResponseType().toString(), response.getDescription());
+				Loger log = new Loger();
+				log.wirteLogs(logsParameters);
+
+			} else if (query.toLowerCase().contains("use")) {
+				UseDatabaseQueryProc useDatabaseQueryProc = this.queryParserExecutor.getUseDatabaseQueryProc();
+				CreateSchema createSchema = new CreateSchema(useDatabaseQueryProc.getDbName().toLowerCase());
+				response = SchemaHandler.checkSchemaQuery(createSchema);
+				if (response.getResponseType().toString().equals(ResponseType.SUCCESS.toString())) {
+					this.dbName = useDatabaseQueryProc.getDbName().toLowerCase();
+					this.dbCreated = true;
+				}
+				printResponse(response.getResponseType().toString(), response.getDescription());
+				Instant end = Instant.now();
+				logsParameters = new LogsParameters("use", String.valueOf(Duration.between(this.startTime, end)), query, this.username, String.valueOf(this.startTime), "", "", "", "", this.dbName, "", 0, takeNoOfTables(this.dbName), takeTableName(this.dbName).toArray(new String[0]), takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(), response.getResponseType().toString(), response.getDescription());
+				Loger log = new Loger();
+				log.wirteLogs(logsParameters);
+
 			}
-			printResponse(response.getResponseType().toString(), response.getDescription());
-			Instant end = Instant.now();
-			logsParameters=new LogsParameters("use",String.valueOf(Duration.between(this.startTime, end)),query,this.username,String.valueOf(this.startTime),"", "","", "",this.dbName,"",0,takeNoOfTables(this.dbName),takeTableName(this.dbName).toArray(new String[0]),takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(),response.getResponseType().toString(),response.getDescription());
-			Loger log = new Loger();
-			log.wirteLogs(logsParameters);
-
+		}
+		else {
+			if(!((query.equalsIgnoreCase("start transaction;") || query.equalsIgnoreCase("start transaction") || (query.equalsIgnoreCase("commit;") || query.equalsIgnoreCase("commit")))))
+				Transaction.feedTransactionArray(query);
 		}
 
 
