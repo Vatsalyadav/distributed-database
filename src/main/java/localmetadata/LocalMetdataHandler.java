@@ -46,7 +46,7 @@ public class LocalMetdataHandler {
             line += UtilsConstant.SEPERATOR;
 
             if (createQuery.getColumns().get(i).equals(createQuery.getForeignKey())) {
-                if (UtilsMetadata.fkRefExists(path + UtilsConstant.PREFIX_LOCAL_METADATA + createQuery.getForeignKeyRefTable() + ".txt", createQuery.getForeignKeyRefCol())) {
+                if (UtilsMetadata.fkRefExists(path + UtilsConstant.PREFIX_LOCAL_METADATA + createQuery.getForeignKeyRefTable() + ".txt", createQuery.getForeignKeyRefCol(), createQuery.getDatabase(), UtilsConstant.PREFIX_LOCAL_METADATA + createQuery.getForeignKeyRefTable() + ".txt")) {
                     line += "FK" +
                             UtilsConstant.SEPERATOR + createQuery.getForeignKeyRefTable() +
                             UtilsConstant.SEPERATOR + createQuery.getForeignKeyRefCol();
