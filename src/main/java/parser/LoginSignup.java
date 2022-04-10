@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.util.*;
 public class LoginSignup {
     //"User_Profile"
+    String userName="";
 
     boolean login() throws IOException {
         //Id, pw , ask any one security que
@@ -18,6 +19,7 @@ public class LoginSignup {
 
         System.out.println("type your unique user Id:");
         userId = sc.nextLine();
+        setUserName(userId);
         System.out.println("Type password:");
         pwd=sc.nextLine();
 
@@ -99,6 +101,7 @@ public class LoginSignup {
         System.out.println("====REGISTER====");
         System.out.println("type your unique user Id:");
         userId = sc.nextLine();
+
         System.out.println("Type password:");
         pwd=sc.nextLine();
         pwd = Security.encrypt(pwd);
@@ -183,5 +186,13 @@ public class LoginSignup {
         }
         sc.close();
         return false;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

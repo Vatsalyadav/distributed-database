@@ -5,6 +5,7 @@ import utils.UtilsConstant;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class ReverseEngineering {
@@ -16,7 +17,7 @@ public class ReverseEngineering {
     int count = 0;
 
 
-    public String[] getRankOrder(String databaseName) {
+    public String[] getRankOrder(String databaseName) throws IOException {
         try {
             generateTableRank(databaseName);
             return createRelationships();
@@ -26,7 +27,7 @@ public class ReverseEngineering {
         }
     }
 
-    private void generateTableRank(String databaseName) throws FileNotFoundException {
+    private void generateTableRank(String databaseName) throws IOException {
 
             mTableMetadata = getTableMetadata(databaseName, "metadata_");
             for (String tableName: mTableMetadata.keySet()) {
@@ -36,10 +37,10 @@ public class ReverseEngineering {
 
     }
 
-    public HashMap<String, List<String>> getTableMetadata(String databaseName, String filePrefix) {
+    public HashMap<String, List<String>> getTableMetadata(String databaseName, String filePrefix) throws IOException {
         HashMap<String, List<String>> databaseMetadata = new HashMap<>();
         try {
-            File databaseFolder = new File(mDatabaseFilePath + databaseName);
+            File databaseFolder = new File(mDatabaseFilePath + databaseName+"/global_metadata.txt");
             String readLine = "";
             String tableName = "";
             if (databaseFolder.isFile()) {
@@ -48,7 +49,7 @@ public class ReverseEngineering {
                     readLine = readFile.nextLine();
                     if (readLine.startsWith(filePrefix)) {
                         tableName = readLine.split("_")[1].split("\\|")[0];
-                        List<String> tableMetadata = DistributedManager.readFile(databaseName, mDatabaseFilePath + databaseName + "/" + readLine, readLine);
+                        List<String> tableMetadata = DistributedManager.readFile(databaseName, mDatabaseFilePath + databaseName + "/" + readLine.split("\\|")[0], readLine.split("\\|")[0]);
                         databaseMetadata.put(tableName.substring(0, tableName.length() - 4), tableMetadata);
                     }
                 }
