@@ -1,5 +1,7 @@
 package parser;
 
+import crypto.Security;
+
 import java.io.*;
 import java.security.MessageDigest;
 import java.util.*;
@@ -21,7 +23,7 @@ public class LoginSignup {
 
 
 
-        FileReader fr =  new FileReader("src/main/java/parser/UserData/User_Profile.txt");
+        FileReader fr =  new FileReader("./src/main/java/parser/UserData/User_Profile.txt");
         BufferedReader br= new BufferedReader(fr);
 
 
@@ -42,6 +44,7 @@ public class LoginSignup {
             String[] parts = byUser[i].split(",");
                 if(parts[0].equalsIgnoreCase(userId)){
                     orgpwd = parts[1];
+                    orgpwd = Security.decrypt(orgpwd);
                     if(orgpwd.equals(pwd)){
 
                         List<Integer> givenList = Arrays.asList(2, 4, 6);
@@ -98,6 +101,7 @@ public class LoginSignup {
         userId = sc.nextLine();
         System.out.println("Type password:");
         pwd=sc.nextLine();
+        pwd = Security.encrypt(pwd);
      //   String sha256hex = org.apache.commons.codec.digest.DigestUtils.sha256Hex(pwd);
         System.out.println("Q1:");
         que.add(sc.nextLine());
@@ -117,11 +121,11 @@ public class LoginSignup {
         System.out.println("A3:");
         ans.add(sc.nextLine());
 
-        File f = new File("src/main/java/parser/UserData/User_Profile.txt");
+        File f = new File("./src/main/java/parser/UserData/User_Profile.txt");
 
 
 
-        FileReader fr =  new FileReader("src/main/java/parser/UserData/User_Profile.txt");
+        FileReader fr =  new FileReader("./src/main/java/parser/UserData/User_Profile.txt");
         BufferedReader br= new BufferedReader(fr);
 
 
