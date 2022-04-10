@@ -13,7 +13,10 @@ public class RemoteHandler {
 
     private static final String username = "amansbhandari";
     private static final int port = 22;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
     //private static final String privateKey = "/Users/amansinghbhandari/Documents/gcp_keys/amansbhandari";
     private static final String privateKey = "/home/amansbhandari/keys/amansbhandari";
 

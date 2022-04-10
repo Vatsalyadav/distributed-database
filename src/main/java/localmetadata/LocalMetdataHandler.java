@@ -59,7 +59,10 @@ public class LocalMetdataHandler {
                         UtilsConstant.SEPERATOR;
             }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
             content += line + "\n";
         }
         DistributedManager.writeFile(createQuery.getDatabase(),filePath,UtilsConstant.PREFIX_LOCAL_METADATA + createQuery.getTableName() + ".txt",content);

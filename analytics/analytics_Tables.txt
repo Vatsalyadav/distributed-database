@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 Total 9 create operations are performed on 
 Total 1 create operations are performed on persons
+=======
+Total 1 CREATE operations are performed on student
+Total 1 CREATE operations are performed on T1
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa

@@ -1,9 +1,12 @@
 package parser;
 
 import java.io.IOException;
+<<<<<<< HEAD
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -31,6 +34,7 @@ public class WriteQueries {
 	private Instant startTime;
 	private String username="";
 
+<<<<<<< HEAD
 	public WriteQueries(String userName) {
     	 queryParserExecutor=new    QueryParserExecutor();
 		 this.username=userName;
@@ -65,6 +69,8 @@ public class WriteQueries {
 
 	}
 
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 	void takeInput() throws IOException {
 		Scanner sc = new Scanner(System.in);
 
@@ -95,9 +101,13 @@ public class WriteQueries {
 
 	}
 
+<<<<<<< HEAD
 	private Response setDataAndExecuteQuery(String query) throws IOException, ParseException {
 		String[] arrayStr={};
 		int[] arrayInt={};
+=======
+	private Response setDataAndExecuteQuery(String query) throws IOException {
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 
 		Response response = null;
 		if (this.queryParserExecutor.isCreDbQuery(query)) {

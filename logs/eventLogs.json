@@ -1,1 +1,19 @@
+<<<<<<< HEAD
 {"events":[{"timeStamp":"2022-04-10T14:55:03.735933800Z","condition":"","numberOfRowsChanges":0,"columns":"","values":"","onDatabase":"","onTable":"","event":"create","crashReport":"Database created"}]}
+=======
+{
+  "events": [
+    {
+      "timeStamp": "2022-04-09 16:33:05.298",
+      "condition": "",
+      "numberOfRowsChanges": 0,
+      "columns": "column1,column2",
+      "values": "",
+      "onDatabase": "University",
+      "onTable": "T1",
+      "event": "CREATE",
+      "crashReport": ""
+    }
+  ]
+}
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa

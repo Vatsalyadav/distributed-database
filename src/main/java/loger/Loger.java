@@ -19,16 +19,23 @@ public class Loger {
         writeEventLog(params);
         writeDatabaseLog(params);
         writeQueryLog(params);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
     }
 
     public void writeEventLog(LogsParameters params) throws IOException, ParseException {
         // ////FileWriter //fileWriter;
         JSONParser parser = new JSONParser();
         try {
+<<<<<<< HEAD
 
             List<String> log=DistributedManager.readFile("", logPath+"/eventLogs.json", "eventLogs.json");
 
+=======
+            List<String> log=DistributedManager.readFile(params.database, logPath+"/eventLogs.json", "eventLogs.json");
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
             Object obj = parser.parse(log.get(0));
             JSONObject logsJsonObject = (JSONObject) obj;
             JSONArray eventLogArray = (JSONArray) logsJsonObject.get("events");
@@ -145,7 +152,10 @@ public class Loger {
         // ////FileWriter //fileWriter;
         JSONParser parser = new JSONParser();
         try {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
             List<String> log = DistributedManager.readFile(params.database, logPath + "/queryLogs.json",
                     "queryLogs.json");
             Object obj = parser.parse(log.get(0));
@@ -164,7 +174,10 @@ public class Loger {
             queryLog.put("values", params.values);
             queryLog.put("isSuccessful", params.isSuccessful);
             queryLogArray.add(queryLog);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
             // ////fileWriter = new //FileWriter(logPath + "/queryLogs.json");
             DistributedManager.writeFile("", logPath+"/queryLogs.json", "queryLogs.json", logsJsonObject.toJSONString());
             // //fileWriter.append(logsJsonObject.toJSONString());
@@ -189,7 +202,10 @@ public class Loger {
             queryLog.put("values", params.values);
             queryLog.put("isSuccessful", params.isSuccessful);
             queryLogArray.add(queryLog);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
             DistributedManager.writeFile("", logPath + "/queryLogs.json", "queryLogs.json",
                     logsJsonObject.toJSONString());
             // ////fileWriter = new //FileWriter(logPath + "/queryLogs.json");

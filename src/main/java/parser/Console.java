@@ -14,10 +14,14 @@ import reverseEngineering.ReverseEngineering;
 
 public class Console {
 
+<<<<<<< HEAD
 	static String username="";
 	 static LoginSignup ls;
 	boolean picker(int no) throws IOException, ParseException {
 
+=======
+	boolean picker(int no) throws IOException {
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 		if (no == 1) {
 			WriteQueries wq = new WriteQueries(username);
 
@@ -48,8 +52,12 @@ public class Console {
 		return false;
 	}
 
+<<<<<<< HEAD
 	void userInput() throws IOException, ParseException {
 
+=======
+	void userInput() throws IOException {
+>>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 
 		Scanner sc = new Scanner(System.in);
 		System.out.println();
