@@ -207,7 +207,7 @@ public class UtilsMetadata {
     public HashMap<String, List<String>> fetchDBData(String databaseName, String filePrefix) {
         HashMap<String, List<String>> databaseMetadata = new HashMap<>();
         try {
-            File databaseFolder = new File(UtilsConstant.DATABASE_ROOT_FOLDER+"/" + databaseName);
+            File databaseFolder = new File(UtilsConstant.DATABASE_ROOT_FOLDER+"/" + databaseName+"/global_metadata.txt");
             String readLine = "";
             String tableName = "";
             if (databaseFolder.isFile()) {
@@ -216,7 +216,7 @@ public class UtilsMetadata {
                     readLine = readFile.nextLine();
                     if (readLine.startsWith(filePrefix)) {
                         tableName = readLine.split("_")[1].split("\\|")[0];
-                        List<String> tableMetadata = DistributedManager.readFile(databaseName, UtilsConstant.DATABASE_ROOT_FOLDER+"/" + databaseName + "/" + readLine, readLine);
+                        List<String> tableMetadata = DistributedManager.readFile(databaseName, UtilsConstant.DATABASE_ROOT_FOLDER+"/" + databaseName + "/" + readLine.split("\\|")[0], readLine.split("\\|")[0]);
                         databaseMetadata.put(tableName.substring(0, tableName.length() - 4), tableMetadata);
                     }
                 }
