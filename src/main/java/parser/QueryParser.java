@@ -14,7 +14,7 @@ public class QueryParser {
 		boolean isQueryValid = false;
 
 		if (query == null || query.trim().equals("")) {
-			this.errorMessage = "Invalid sql query";
+			this.errorMessage = "Invalid sql query.";
 		}
 
 		if (query.toLowerCase().contains("create")) {
@@ -22,7 +22,7 @@ public class QueryParser {
 			isQueryValid = parse(query);
 
 			if (!isQueryValid) {
-				this.errorMessage = "Invalid create query syntax";
+				this.errorMessage = "Invalid create query syntax.";
 			}
 
 		}
@@ -37,7 +37,7 @@ public class QueryParser {
 			}
 
 			if (!isQueryValid) {
-				this.errorMessage = "Invalid insert query syntax";
+				this.errorMessage = "Invalid insert query syntax.";
 			}
 
 		}
@@ -47,7 +47,7 @@ public class QueryParser {
 			isQueryValid = isQueryValid(query, RegexConstant.DELETE_REGEX);
 
 			if (!isQueryValid) {
-				this.errorMessage = "Invalid delete query syntax";
+				this.errorMessage = "Invalid delete query syntax.";
 			}
 
 		}
@@ -58,7 +58,7 @@ public class QueryParser {
 			isQueryValid = isQueryValid(query, RegexConstant.SELECT_REGEX);
 
 			if (!isQueryValid) {
-				this.errorMessage = "Invalid select  query syntax";
+				this.errorMessage = "Invalid select  query syntax.";
 			}
 
 		}
@@ -68,7 +68,7 @@ public class QueryParser {
 			isQueryValid = isQueryValid(query, RegexConstant.UPDATE_REGEX);
 
 			if (!isQueryValid) {
-				this.errorMessage = "Invalid update  query syntax";
+				this.errorMessage = "Invalid update  query syntax.";
 			}
 
 		}
@@ -77,7 +77,7 @@ public class QueryParser {
 			isQueryValid = isQueryValid(query, RegexConstant.USE_REGEX);
 
 			if (!isQueryValid) {
-				this.errorMessage = "Invalid use database  query syntax";
+				this.errorMessage = "Invalid use database  query syntax.";
 			}
 
 		}
