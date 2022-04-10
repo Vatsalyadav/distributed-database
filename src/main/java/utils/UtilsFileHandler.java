@@ -1,6 +1,5 @@
 package utils;
 
-import java.io.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,10 +14,10 @@ import com.jcraft.jsch.Buffer;
 
 public class UtilsFileHandler {
 
-    public static void writeToFile(String filepath, String content) throws IOException {
-        FileWriter fileWriter = new FileWriter(new File(filepath));
-        fileWriter.append(content);
-        fileWriter.close();
+    public static void writeToFile(String filepath, String content) throws FileNotFoundException, UnsupportedEncodingException {
+        PrintWriter writer = new PrintWriter(filepath, "UTF-8");
+        writer.println(content);
+        writer.close();
     }
 
     public static List<String> readFile(String filepath) throws IOException {

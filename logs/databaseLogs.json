@@ -1,1 +1,12 @@
-{"databases":[{"timeStamp":"2022-04-10T14:55:03.735933800Z","tables":[{}],"numberOfTables":0,"databaseName":""}]}
+{
+  "databases": [
+    {
+      "tables": [
+        { "numberOfRows": 4, "tableName": "students" },
+        { "numberOfRows": 2, "tableName": "courses" }
+      ],
+      "numberOfTables": 2,
+      "databaseName": "University"
+    }
+  ]
+}
