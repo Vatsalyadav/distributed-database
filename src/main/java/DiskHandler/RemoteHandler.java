@@ -13,7 +13,10 @@ public class RemoteHandler {
 
     private static final String username = "amansbhandari";
     private static final int port = 22;
-    private static final String privateKey = "/Users/amansinghbhandari/Documents/gcp_keys/amansbhandari";
+
+    //private static final String privateKey = "/Users/amansinghbhandari/Documents/gcp_keys/amansbhandari";
+    private static final String privateKey = "/home/amansbhandari/keys/amansbhandari";
+
 
     public static List<String> executeCommand(String command, String host) throws Exception {
         Session session = null;
@@ -38,12 +41,21 @@ public class RemoteHandler {
                 Thread.sleep(100);
             }
 
+
             String responseString = new String(responseStream.toByteArray());
-            String[] lines = responseString.split("[\\n]");
-            for(String line : lines)
+            if(responseString.isEmpty())
             {
-                content.add(line);
+                content = new ArrayList();
             }
+            else
+            {
+                String[] lines = responseString.split("[\\n]");
+                for(String line : lines)
+                {
+                    content.add(line);
+                }
+            }
+
 
         } finally {
             if (session != null) {

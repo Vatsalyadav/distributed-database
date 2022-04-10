@@ -17,6 +17,7 @@ public class Console {
 	static String username="";
 	 static LoginSignup ls;
 	boolean picker(int no) throws IOException, ParseException {
+
 		if (no == 1) {
 			WriteQueries wq = new WriteQueries(username);
 
@@ -48,6 +49,7 @@ public class Console {
 	}
 
 	void userInput() throws IOException, ParseException {
+
 
 		Scanner sc = new Scanner(System.in);
 		System.out.println();

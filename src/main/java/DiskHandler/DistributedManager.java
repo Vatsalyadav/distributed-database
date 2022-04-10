@@ -3,8 +3,7 @@ package DiskHandler;
 import utils.UtilsConstant;
 import utils.UtilsFileHandler;
 
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.List;
 
 public class DistributedManager
@@ -16,11 +15,15 @@ public class DistributedManager
      * @param database
      * @param filename name of the file you are looking
      * @return
+     * @throws IOException
      */
-    private static String whichInstance(String database , String filename)
+    private static String whichInstance(String database , String filename) throws IOException
     {
+        if(database.isEmpty())
+            return "-1";
+
         String fullPathGM = UtilsConstant.DATABASE_ROOT_FOLDER+"/"+ database + "/"+ UtilsConstant.GM_FILE_NAME;
-        try {
+
             List<String> content = UtilsFileHandler.readFile(fullPathGM);
 
             for(String line : content)
@@ -32,12 +35,6 @@ public class DistributedManager
                 }
             }
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
         return "-1";
     }
 
@@ -47,15 +44,16 @@ public class DistributedManager
      * @param fullpath path of the file you are looking for. For e.g. database/University/metadata_students.txt
      * @param filename just the file name with extension you are looking for. For e.g. metadata_students.txt
      * @return
+     * @throws IOException
      */
-    public static List<String> readFile(String database, String fullpath, String filename)
+    public static List<String> readFile(String database, String fullpath, String filename) throws IOException
     {
         String instanceOfFile = whichInstance(database, filename);
         try {
             List<String> myInstance = UtilsFileHandler.readFile("instances/local.txt");
             List<String> otherInstance = UtilsFileHandler.readFile("instances/remote.txt");
 
-            if(instanceOfFile.equals(myInstance.get(0)) || filename.startsWith("global_") || fullpath.startsWith("logs"))    //The file is in current instance
+            if(instanceOfFile.equals(myInstance.get(0)) || filename.startsWith("global_") || fullpath.startsWith("logs") || fullpath.startsWith("analytics"))    //The file is in current instance
             {
                 return UtilsFileHandler.readFile(fullpath);
             }
@@ -80,26 +78,28 @@ public class DistributedManager
      * @param fullpath path of the file you are looking for. For e.g. database/University/metadata_students.txt
      * @param filename just the file name with extension you are looking for. For e.g. metadata_students.txt
      * @return
+     * @throws IOException
      */
-    public static Boolean writeFile(String database, String fullpath, String filename, String content)
+    public static Boolean writeFile(String database, String fullpath, String filename, String content) throws IOException
     {
         String instanceOfFile = whichInstance(database, filename);
+
+
         try {
             List<String> myInstance = UtilsFileHandler.readFile("instances/local.txt");
             List<String> otherInstance = UtilsFileHandler.readFile("instances/remote.txt");
 
-            if(instanceOfFile.equals(myInstance.get(0)) || filename.startsWith("global_") || fullpath.startsWith("logs"))    //The file is in current instance
+            if(instanceOfFile.equals(myInstance.get(0)) || filename.startsWith("global_") || fullpath.startsWith("logs") || fullpath.startsWith("dump") || fullpath.startsWith("analytics"))    //The file is in current instance
             {
                 UtilsFileHandler.writeToFile(fullpath, content);
 
-                if(!filename.startsWith("global_") && !fullpath.startsWith("logs"))
+                if(!filename.startsWith("global_") && !fullpath.startsWith("logs") && !fullpath.startsWith("dump") && !fullpath.startsWith("analytics"))
                     return true;
-
             }
 
             fullpath =  REMOTE_DATABASE_PATH + fullpath;
             //The file is in remote instance.. write it
-            RemoteHandler.executeCommand("echo -e"  + "\""+ content + "\""+ "> " + fullpath , otherInstance.get(1));
+            RemoteHandler.executeCommand("echo -e"  + " \""+ content + "\""+ "> " + fullpath , otherInstance.get(1));
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -110,6 +110,49 @@ public class DistributedManager
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+        return true;
+    }
+
+    /**
+     * creates a new folder at the given path
+     * @param fullpath path of the file you are looking for. For e.g. database/University/metadata_students.txt
+     * @return
+     * @throws IOException
+     */
+    public static Boolean createFolder(String fullpath) throws IOException
+    {
+        new File(fullpath).mkdirs();
+
+        List<String> otherInstance = UtilsFileHandler.readFile("instances/remote.txt");
+
+        //The file is in remote instance.. write it
+        try {
+            RemoteHandler.executeCommand("mkdir dmwaproject/" + fullpath , otherInstance.get(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    /**
+     * creates an empty global_metadata.txt
+     * @param fullpath path of the file you are looking for. For e.g. database/University/metadata_students.txt
+     * @return
+     * @throws IOException
+     */
+    public static Boolean createEmptyFile(String fullpath) throws IOException
+    {
+        PrintWriter writer = new PrintWriter(fullpath, "UTF-8");
+        writer.close();
+
+        List<String> otherInstance = UtilsFileHandler.readFile("instances/remote.txt");
+
+        //The file is in remote instance.. write it
+        try {
+            RemoteHandler.executeCommand("touch dmwaproject/" + fullpath , otherInstance.get(1));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return true;
     }

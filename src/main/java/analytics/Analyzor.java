@@ -6,6 +6,12 @@ import java.util.List;
 import java.util.Set;
 
 import DiskHandler.DistributedManager;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -29,6 +35,7 @@ public class Analyzor {
         }
         return databaseSet;
     }
+
     public Set<String> getTables() throws FileNotFoundException, IOException, ParseException {
         JSONParser parser = new JSONParser();
         List<String> log = DistributedManager.readFile("", logPath + "/queryLogs.json",
@@ -101,6 +108,7 @@ public class Analyzor {
         }
         return count;
     }
+
 
     public int countNumberOfQuery(String user, String database) throws IOException, ParseException {
         int count = 0;

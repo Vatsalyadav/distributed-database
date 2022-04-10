@@ -1,6 +1,12 @@
 package utils;
 
 import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -16,8 +22,19 @@ public class UtilsFileHandler {
     }
 
     public static List<String> readFile(String filepath) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(filepath));
-        String line = br.readLine();
+
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(filepath));
+        } catch (FileNotFoundException e) {
+            return new ArrayList<>();
+        }
+        String line = null;
+        try {
+            line = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         List<String> content = new ArrayList<>();
         while (line!=null) {
             content.add(line);

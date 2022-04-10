@@ -28,6 +28,7 @@ public class Loger {
         try {
 
             List<String> log=DistributedManager.readFile("", logPath+"/eventLogs.json", "eventLogs.json");
+
             Object obj = parser.parse(log.get(0));
             JSONObject logsJsonObject = (JSONObject) obj;
             JSONArray eventLogArray = (JSONArray) logsJsonObject.get("events");
@@ -144,7 +145,7 @@ public class Loger {
         // ////FileWriter //fileWriter;
         JSONParser parser = new JSONParser();
         try {
-            System.out.println("Startttt");
+
             List<String> log = DistributedManager.readFile(params.database, logPath + "/queryLogs.json",
                     "queryLogs.json");
             Object obj = parser.parse(log.get(0));
@@ -188,7 +189,7 @@ public class Loger {
             queryLog.put("values", params.values);
             queryLog.put("isSuccessful", params.isSuccessful);
             queryLogArray.add(queryLog);
-            System.out.println("Exc"+queryLogArray);
+
             DistributedManager.writeFile("", logPath + "/queryLogs.json", "queryLogs.json",
                     logsJsonObject.toJSONString());
             // ////fileWriter = new //FileWriter(logPath + "/queryLogs.json");
