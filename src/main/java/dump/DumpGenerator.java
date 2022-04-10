@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-<<<<<<< HEAD
 import QueryContainer.UseDatabaseQueryProc;
 import parser.QueryParserExecutor;
 import parser.exception.InvalidQueryException;
@@ -22,9 +21,6 @@ import query.container.CreateSchema;
 import query.manager.SchemaHandler;
 import query.response.Response;
 import query.response.ResponseType;
-
-=======
->>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 import reverseEngineering.ReverseEngineering;
 import utils.UtilsConstant;
 import DiskHandler.DistributedManager;
@@ -39,7 +35,6 @@ public class DumpGenerator {
     ReverseEngineering reverseEngineering = new ReverseEngineering();
     String[] sortedTables;
 
-<<<<<<< HEAD
     String databaseName;
     private QueryParserExecutor queryParserExecutor;
 
@@ -86,15 +81,6 @@ public class DumpGenerator {
         }
     }
 
-=======
-    public void createBothDump(String databaseName) throws IOException {
-        String out = "";
-        out = out + createStructureDump(databaseName);
-        out = out + createDataDump(databaseName);
-        DistributedManager.writeFile(databaseName, dumpPath + "/dump.sql", "dump.sql", out);
-    }
-
->>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
     public String createDataDump(String databaseName) throws IOException {
 
         HashMap<String, List<String>> tables = UtilsMetadata.fetchDBData(databaseName, prefixTable);
@@ -176,13 +162,9 @@ public class DumpGenerator {
 
     }
 
-<<<<<<< HEAD
     private void printResponse(String status, String desc) {
         System.out.println(status + ":" + desc);
     }
 
 
-
-=======
->>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
 }
