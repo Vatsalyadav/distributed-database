@@ -1,1 +1,1 @@
-{"events":[{"timeStamp":"2022-04-10T12:22:20.445268200Z","condition":"","numberOfRowsChanges":0,"columns":"","values":"","onDatabase":"uni","onTable":"","event":"use","crashReport":"Database exists"},{"timeStamp":"2022-04-10T12:23:17.472088800Z","condition":"","numberOfRowsChanges":0,"columns":"","values":"","onDatabase":"uni","onTable":"","event":"create","crashReport":"Database created"}]}
+{"events":[]}

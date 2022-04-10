@@ -1,1 +1,1 @@
-{"querys":[{"timeStamp":"2022-04-10T12:22:20.445268200Z","database":"uni","isSuccessful":"SUCCESS","columns":"","query":"use uni;","values":"","excutionTime":"PT0.019923S","type":"","user":"aman","table":"","codition":""},{"timeStamp":"2022-04-10T12:23:17.472088800Z","database":"uni","isSuccessful":"SUCCESS","columns":"","query":"create database univ;","values":"","excutionTime":"PT2.0328173S","type":"create","user":"aman","table":"","codition":""}]}
+{"querys":[]}
