@@ -5,6 +5,7 @@ import utils.UtilsConstant;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class ReverseEngineering {
@@ -54,7 +55,7 @@ public class ReverseEngineering {
                 }
             }
         }
-        catch (FileNotFoundException e){
+        catch (IOException e){
             e.printStackTrace();
         }
         return databaseMetadata;

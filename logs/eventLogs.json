@@ -1,16 +1,1 @@
-{
-  "events": [
-    {
-      "timeStamp": "2022-04-09 16:33:05.298",
-      "condition": "",
-      "numberOfRowsChanges": 0,
-      "columns": "column1,column2",
-      "values": "",
-      "onDatabase": "University",
-      "onTable": "T1",
-      "event": "CREATE",
-      "crashReport": ""
-    }
-  ]
-}
->>>>>>> 51b1250861bf6a3d4cd0edfd0771bf88154b47fa
+{"events":[{"timeStamp":"2022-04-10T12:22:20.445268200Z","condition":"","numberOfRowsChanges":0,"columns":"","values":"","onDatabase":"uni","onTable":"","event":"use","crashReport":"Database exists"},{"timeStamp":"2022-04-10T12:23:17.472088800Z","condition":"","numberOfRowsChanges":0,"columns":"","values":"","onDatabase":"uni","onTable":"","event":"create","crashReport":"Database created"}]}
