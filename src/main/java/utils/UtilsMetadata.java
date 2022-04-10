@@ -15,8 +15,8 @@ public class UtilsMetadata {
 
     public static Boolean fkRefExists(String tableMetadataFilePath , String columnName, String database, String filename)
     {
-        File f = new File(tableMetadataFilePath);
-        if(f.exists() && !f.isDirectory()) {    //table exists
+//        File f = new File(tableMetadataFilePath);
+//        if(f.exists() && !f.isDirectory()) {    //table exists
             try {
 //                Scanner in = new Scanner(new FileReader(tableMetadataFilePath));
                 List<String> lines = DistributedManager.readFile(database,tableMetadataFilePath,filename);
@@ -30,7 +30,7 @@ public class UtilsMetadata {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+//            }
 
             return false;
 
