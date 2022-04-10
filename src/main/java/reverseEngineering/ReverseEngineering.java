@@ -99,8 +99,10 @@ public class ReverseEngineering {
                     if (columnDesc[3].equals("PK"))
                         cardinality = "1:N";
                     else cardinality = "N:M";
-                    dependencyHashMap.put(columnDesc[5],new String[]{columnDesc[5], columnDesc[6], cardinality});
-                    relationships.put(tableRank.get(tableName), tableRank.get(columnDesc[5]));
+                    dependencyHashMap.put(columnDesc[5].toLowerCase(),new String[]{columnDesc[5].toLowerCase(), columnDesc[6], cardinality});
+                    relationships.put(tableRank.get(tableName), tableRank.get(columnDesc[5].toLowerCase()));
+                } else{
+                    relationships.put(tableRank.get(tableName),tableRank.size());
                 }
             }
             dependencyGraph.put(tableName, dependencyHashMap);
