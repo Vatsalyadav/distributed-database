@@ -14,6 +14,8 @@ import query.manager.SchemaHandler;
 import query.response.Response;
 import query.response.ResponseType;
 
+import static query.transaction.Transaction.autoCommit;
+
 public class WriteQueries {
 	public static String dbName = "";
 	public static String query = "";
@@ -56,7 +58,17 @@ public class WriteQueries {
 	private Response setDataAndExecuteQuery(String query) {
 
 		Response response = null;
-		if (this.queryParserExecutor.isCreDbQuery(query)) {
+		if (query.equalsIgnoreCase("start transaction;") || query.equalsIgnoreCase("start transaction")) {
+			// Transaction
+			TransactionQuery transactionQuery =  new TransactionQuery(this.dbName);
+			response = QueryHandler.executeQuery(transactionQuery, SqlType.START_TRANSACTION);
+			printResponse(response.getResponseType().toString(), response.getDescription());
+		} else if ((query.equalsIgnoreCase("commit;") || query.equalsIgnoreCase("commit")) && !autoCommit) {
+			CommitQuery commitQuery =  new CommitQuery(this.dbName);
+			response = QueryHandler.executeQuery(commitQuery, SqlType.COMMIT_TRANSACTION);
+			printResponse(response.getResponseType().toString(), response.getDescription());
+		}
+		else if (this.queryParserExecutor.isCreDbQuery(query)) {
 			CreateDatabaseProcessor createDatabaseProc = this.queryParserExecutor.getCreateDatabaseProc();
 			CreateSchema createSchema = new CreateSchema(createDatabaseProc.getDbName().toLowerCase());
 			response = SchemaHandler.executeSchemaCreateQuery(createSchema);
