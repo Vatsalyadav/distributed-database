@@ -186,6 +186,23 @@ public class WriteQueries {
 			Loger log = new Loger();
 			log.wirteLogs(logsParameters);
 
+		}	else if (query.toLowerCase().contains("update")) {
+			UpdateQueryProcessor updateQueryProcessor = this.queryParserExecutor.getUpdateQueryProcessor();
+				List<String> column=new ArrayList<String>();
+				column.add(updateQueryProcessor.getColTobeUpdate());
+				List<String> values=new ArrayList<String>();
+				values.add(updateQueryProcessor.getColValueTobeSet());
+
+					UpdateQuery updateQuery = new UpdateQuery(column,values,updateQueryProcessor.getTableName(),this.dbName,updateQueryProcessor.getColumnInWhere(),updateQueryProcessor.getWhereCond(),updateQueryProcessor.getFactor());
+
+			response = QueryHandler.executeQuery(updateQuery, SqlType.UPDATE);
+
+			printResponse(response.getResponseType().toString(), response.getDescription());
+			Instant end = Instant.now();
+//				logsParameters=new LogsParameters("update",String.valueOf(Duration.between(this.startTime, end)),query,this.username,String.valueOf(this.startTime),"update", updateQueryProcessor.getWhereCond().toString(),updateQueryProcessor.getColTobeUpdate(), updateQueryProcessor.getFactor(),this.dbName,updateQueryProcessor.getTableName(),0,takeNoOfTables(this.dbName),takeTableName(this.dbName).toArray(new String[0]),takeNoOfRows(this.dbName).stream().mapToInt(Integer::intValue).toArray(),response.getResponseType().toString(),response.getDescription());
+//			Loger log = new Loger();
+//			log.wirteLogs(logsParameters);
+
 		}
 
 

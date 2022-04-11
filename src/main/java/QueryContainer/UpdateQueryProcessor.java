@@ -11,11 +11,11 @@ public class UpdateQueryProcessor {
 
 	private String tableName; // name of the table
 
-	private String columnInWhere; // L.H.S of the where clause
+	private String columnInWhere=""; // L.H.S of the where clause
 
 	private WhereCond whereCond; // Condition of the where clause
 
-	private String factor; // R.H.S in where clause
+	private String factor=""; // R.H.S in where clause
 
 	private String colTobeUpdate;
 

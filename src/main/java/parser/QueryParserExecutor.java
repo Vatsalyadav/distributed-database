@@ -133,4 +133,9 @@ public class QueryParserExecutor {
 		return createDatabaseProc;
 	}
 
+	public UpdateQueryProcessor getUpdateQueryProcessor() {
+		return updateQueryProcessor;
+	}
+
+
 }
