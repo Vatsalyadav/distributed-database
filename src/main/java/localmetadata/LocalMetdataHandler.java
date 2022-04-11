@@ -342,17 +342,17 @@ public class LocalMetdataHandler {
 
 
     public static Response executeTransactionQuery(TransactionQuery transactionQuery, String path) {
-        // TODO: Write your code here autocommit off and create temp folder
-        UtilsConstant.DATABASE_ROOT_FOLDER = "database/temp_";
+
+//        UtilsConstant.DATABASE_ROOT_FOLDER = "database/temp_";
         Transaction.autoCommit = false;
         return new Response(ResponseType.SUCCESS, "Query OK "+UtilsConstant.SEPERATOR + " Transaction Successfully Started!");
     }
 
     public static Response executeCommitQuery(CommitQuery commitQuery, String path) {
-        // TODO: Write your code here for autocommit on and creating temp folder deletion
-        UtilsConstant.DATABASE_ROOT_FOLDER = "database/temp_"; // TODO: Won't work
-        Transaction.autoCommit = false;
-        return new Response(ResponseType.SUCCESS, "Query OK "+UtilsConstant.SEPERATOR + " Transaction Successfully Started!");
+
+//        UtilsConstant.DATABASE_ROOT_FOLDER = "database/temp_"; // TODO: Won't work
+        Transaction.autoCommit = true;
+        return new Response(ResponseType.SUCCESS, "Query OK "+UtilsConstant.SEPERATOR + " Transaction Successfully Committed!");
     }
 
 }

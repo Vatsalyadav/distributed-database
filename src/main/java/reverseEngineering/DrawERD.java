@@ -37,11 +37,11 @@ public class DrawERD {
 
     private void readMetadata(String tableName) {
         List<String> tableMetadata = mTableMetadata.get(tableName);
-        System.out.println(tableMetadata);
+//        System.out.println(tableMetadata);
         String[] columnDesc;
         for (String readFile : tableMetadata) {
             columnDesc = readFile.split("[|]");
-            System.out.println("columnDesc: "+Arrays.toString(columnDesc));
+//            System.out.println("columnDesc: "+Arrays.toString(columnDesc));
             if (columnDesc.length>2)
                 erd += "|  " + columnDesc[0] + " " + columnDesc[1] + " ".repeat(30 - (columnDesc[0] + columnDesc[1]).length()) + "|\n";
         }
