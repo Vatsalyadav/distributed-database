@@ -145,7 +145,6 @@ public class LoginSignup {
 
         FileWriter ff = new FileWriter(f);
         BufferedWriter fw = new BufferedWriter(ff);
-        System.out.println(que.size()+"  "+ans.size());
         fw.append(tempp);
         fw.append("{");
         //one users detail

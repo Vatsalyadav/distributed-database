@@ -104,7 +104,6 @@ public class WriteQueries {
 	}
 
 	private Response setDataAndExecuteQuery(String query) throws IOException, ParseException, InvalidQueryException {
-		System.out.println("here");
 		String[] arrayStr={};
 		int[] arrayInt={};
 
