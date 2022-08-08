@@ -17,7 +17,7 @@ public class ReverseEngineering {
     int count = 0;
 
 
-    public String[] getRankOrder(String databaseName) throws IOException {
+    public String[] getRankOrder(String databaseName) {
         try {
             generateTableRank(databaseName);
             return createRelationships();
@@ -27,17 +27,17 @@ public class ReverseEngineering {
         }
     }
 
-    private void generateTableRank(String databaseName) throws IOException {
+    private void generateTableRank(String databaseName) throws FileNotFoundException {
 
             mTableMetadata = getTableMetadata(databaseName, "metadata_");
             for (String tableName: mTableMetadata.keySet()) {
                 dependencyGraph.put(tableName, null);
-                tableRank.put(tableName.toLowerCase(), count++);
+                tableRank.put(tableName, count++);
             }
 
     }
 
-    public HashMap<String, List<String>> getTableMetadata(String databaseName, String filePrefix) throws IOException {
+    public HashMap<String, List<String>> getTableMetadata(String databaseName, String filePrefix) {
         HashMap<String, List<String>> databaseMetadata = new HashMap<>();
         try {
             File databaseFolder = new File(mDatabaseFilePath + databaseName+"/global_metadata.txt");
@@ -55,7 +55,7 @@ public class ReverseEngineering {
                 }
             }
         }
-        catch (FileNotFoundException e){
+        catch (IOException e){
             e.printStackTrace();
         }
         return databaseMetadata;
@@ -100,8 +100,10 @@ public class ReverseEngineering {
                     if (columnDesc[3].equals("PK"))
                         cardinality = "1:N";
                     else cardinality = "N:M";
-                    dependencyHashMap.put(columnDesc[5],new String[]{columnDesc[5], columnDesc[6], cardinality});
+                    dependencyHashMap.put(columnDesc[5].toLowerCase(),new String[]{columnDesc[5].toLowerCase(), columnDesc[6], cardinality});
                     relationships.put(tableRank.get(tableName), tableRank.get(columnDesc[5].toLowerCase()));
+                } else{
+                    relationships.put(tableRank.get(tableName),tableRank.size());
                 }
             }
             dependencyGraph.put(tableName, dependencyHashMap);

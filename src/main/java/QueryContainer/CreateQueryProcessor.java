@@ -43,7 +43,6 @@ public class CreateQueryProcessor {
 
 	private void parser1(String regx, String query) {
 
-		System.out.println(regx);
 		final Pattern pattern = Pattern.compile(regx, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 		final Matcher matcher = pattern.matcher(query);
 
@@ -60,7 +59,7 @@ public class CreateQueryProcessor {
 
 				this.columns.add(columnData[0]);
 				this.datatype.add(columnData[1]);
-				System.out.println(data);
+
 
 				if (columnData.length > 2) {
 					if(data.toLowerCase().contains("primary")) {
@@ -90,7 +89,7 @@ public class CreateQueryProcessor {
 
 	private void parser2(String regx, String query) {
 
-		System.out.println(regx);
+
 		final Pattern pattern = Pattern.compile(regx, Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 		final Matcher matcher = pattern.matcher(query);
 

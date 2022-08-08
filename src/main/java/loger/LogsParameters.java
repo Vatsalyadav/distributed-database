@@ -16,11 +16,11 @@ public class LogsParameters {
     int numberOfTables;
     String[]tableNames;
     int[] numberOfRows;
-    Boolean isSuccessful;
+    String isSuccessful;
     String crashReport;
 
 
-    public LogsParameters(String event, String excutionTime, String queryString, String user, String timeStamp, String type, String condition, String columns, String values, String database, String table, int numberOfRowsChanges, int numberOfTables, String[] tableNames, int[] numberOfRows, Boolean isSuccessful,String crashReport) {
+    public LogsParameters(String event, String excutionTime, String queryString, String user, String timeStamp, String type, String condition, String columns, String values, String database, String table, int numberOfRowsChanges, int numberOfTables, String[] tableNames, int[] numberOfRows, String isSuccessful,String crashReport) {
         this.event = event;
         this.excutionTime = excutionTime;
         this.queryString = queryString;

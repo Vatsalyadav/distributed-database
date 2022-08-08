@@ -11,8 +11,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import QueryContainer.UseDatabaseQueryProc;
+import parser.QueryParserExecutor;
+import parser.exception.InvalidQueryException;
+import query.container.CreateSchema;
+import query.manager.SchemaHandler;
+import query.response.Response;
+import query.response.ResponseType;
 import reverseEngineering.ReverseEngineering;
 import utils.UtilsConstant;
 import DiskHandler.DistributedManager;
@@ -27,11 +35,50 @@ public class DumpGenerator {
     ReverseEngineering reverseEngineering = new ReverseEngineering();
     String[] sortedTables;
 
-    public void createBothDump(String databaseName) throws IOException {
-        String out = "";
-        out = out + createStructureDump(databaseName);
-        out = out + createDataDump(databaseName);
-        DistributedManager.writeFile(databaseName, dumpPath + "/dump.sql", "dump.sql", out);
+    String databaseName;
+    private QueryParserExecutor queryParserExecutor;
+
+    private UseDatabaseQueryProc useDatabaseQueryProc;
+
+    public DumpGenerator() {
+        this.queryParserExecutor = new QueryParserExecutor();
+    }
+
+    String takeInput() {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Please select database:");
+        String query = sc.nextLine();
+        return query;
+    }
+
+    public void createBothDump() throws IOException {
+
+        String query = takeInput();
+
+        if (query == null) {
+            System.out.println("Database is not selected");
+        } else {
+
+            try {
+                this.queryParserExecutor.processQuery(query);
+                this.useDatabaseQueryProc=this.queryParserExecutor.getUseDatabaseQueryProc();
+                CreateSchema createSchema = new CreateSchema(useDatabaseQueryProc.getDbName());
+                Response response = SchemaHandler.checkSchemaQuery(createSchema);
+                if (response.getResponseType().toString().equals(ResponseType.SUCCESS.toString())) {
+                    this.databaseName = useDatabaseQueryProc.getDbName();
+                }
+                printResponse(response.getResponseType().toString(), response.getDescription());
+            } catch (InvalidQueryException e) {
+                System.out.println(e.getErrorMsg());
+            }
+
+            String out = "";
+            out = out + createStructureDump(databaseName);
+            out = out + createDataDump(databaseName);
+            System.out.println(out);
+            DistributedManager.writeFile(databaseName, dumpPath + "/dump.sql", "dump.sql", out);
+        }
     }
 
     public String createDataDump(String databaseName) throws IOException {
@@ -88,6 +135,7 @@ public class DumpGenerator {
         String out = "";
         for (String attribute : attributes) {
             String[] columns = attribute.split("\\|", -1);
+            if (columns.length>2)
             for (int i = 0; i < columns.length; i++) {
                 out = out + " " + columns[0] + " " + columns[1] + " ";
                 if (columns[2].equals("true")) {
@@ -114,5 +162,10 @@ public class DumpGenerator {
         return out;
 
     }
+
+    private void printResponse(String status, String desc) {
+        System.out.println(status + ":" + desc);
+    }
+
 
 }

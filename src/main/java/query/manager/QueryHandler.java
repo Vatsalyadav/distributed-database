@@ -46,7 +46,18 @@ public class QueryHandler
         {
             return DeleteHandler.executeDeleteQuery((DeleteQuery) query);
         }
-
+        else if(sqlType.equals(SqlType.START_TRANSACTION))
+        {
+            return TransactionHandler.executeTransactionQuery((TransactionQuery) query);
+        }
+        else if(sqlType.equals(SqlType.COMMIT_TRANSACTION))
+        {
+            return CommitHandler.executeCommitQuery((CommitQuery) query);
+        }
+        else if(sqlType.equals(SqlType.UPDATE))
+        {
+            return UpdateHandler.executeUpdateQuery((UpdateQuery) query);
+        }
         return new Response(ResponseType.INTERNAL_ERROR, "System error.");
     }
 }

@@ -13,14 +13,14 @@ import java.util.Scanner;
 
 public class UtilsMetadata {
 
-    public static Boolean fkRefExists(String tableMetadataFilePath , String columnName)
+    public static Boolean fkRefExists(String tableMetadataFilePath , String columnName, String database, String filename)
     {
-        File f = new File(tableMetadataFilePath);
-        if(f.exists() && !f.isDirectory()) {    //table exists
+//        File f = new File(tableMetadataFilePath);
+//        if(f.exists() && !f.isDirectory()) {    //table exists
             try {
-                Scanner in = new Scanner(new FileReader(tableMetadataFilePath));
-                while(in.hasNext()) {
-                    String line = in.next();
+//                Scanner in = new Scanner(new FileReader(tableMetadataFilePath));
+                List<String> lines = DistributedManager.readFile(database,tableMetadataFilePath,filename);
+                for(String line : lines) {
                     if(line.indexOf(columnName+"|") != -1)
                     {
                        return true;     //found columnname in metadata
@@ -28,7 +28,9 @@ public class UtilsMetadata {
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            }
+            } catch (IOException e) {
+                e.printStackTrace();
+//            }
 
             return false;
 

@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import analytics.Analyzor;
+import dump.DumpGenerator;
+import org.json.simple.parser.ParseException;
 import parser.exception.InvalidQueryException;
 import reverseEngineering.DrawERD;
 import reverseEngineering.ErdExecutor;
@@ -11,9 +14,13 @@ import reverseEngineering.ReverseEngineering;
 
 public class Console {
 
-	boolean picker(int no) throws IOException {
+	static String username="";
+	 static LoginSignup ls;
+	boolean picker(int no) throws IOException, ParseException {
+
+
 		if (no == 1) {
-			WriteQueries wq = new WriteQueries();
+			WriteQueries wq = new WriteQueries(username);
 
 			boolean chk = wq.manager();
 			if (!chk) {
@@ -22,28 +29,28 @@ public class Console {
 			return true;
 		}
 		if (no == 2) {
-
+			DumpGenerator dumpGenerator=new DumpGenerator();
+			dumpGenerator.createBothDump();
 			return true;
 		}
 		if (no == 3) {
-
-			return true;
-		}
-		if (no == 4) {
-
-			return true;
-		}
-		if (no == 5) {
 			ErdExecutor erdExecutor = new ErdExecutor();
 
 			erdExecutor.doReverseEngineering();
+			return true;
+		}
+		if (no == 4) {
+			Analyzor analyzor=new Analyzor();
+			analyzor.printAnalyse(username);
 
 			return true;
 		}
+
 		return false;
 	}
 
-	void userInput() throws IOException {
+	void userInput() throws IOException, ParseException {
+
 
 		Scanner sc = new Scanner(System.in);
 		System.out.println();
@@ -55,7 +62,6 @@ public class Console {
 		System.out.println("2. Export");
 		System.out.println("3. Data Model");
 		System.out.println("4. Analysis");
-		System.out.println("5. Reverse Engineering");
 		int no = sc.nextInt();
 		Boolean success = picker(no);
 		// if(!success){
@@ -65,7 +71,7 @@ public class Console {
 
 	}
 
-	void auth(Boolean passed) throws IOException {
+	void auth(Boolean passed) throws IOException, ParseException {
 
 		LoginSignup ls = new LoginSignup();
 		if (passed) {
@@ -91,11 +97,14 @@ public class Console {
 		}
 	}
 
-	public static void main(String[] string) throws IOException {
-		LoginSignup ls = new LoginSignup();
+	public static void main(String[] string) throws IOException, ParseException {
+		 ls = new LoginSignup();
 		Boolean passed = ls.runHere();
+		username=ls.getUserName();
 		Console con = new Console();
 		con.auth(passed);
 
 	}
+
+
 }

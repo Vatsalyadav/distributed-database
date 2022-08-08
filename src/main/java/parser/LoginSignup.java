@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.util.*;
 public class LoginSignup {
     //"User_Profile"
+    String userName="";
 
     boolean login() throws IOException {
         //Id, pw , ask any one security que
@@ -16,8 +17,9 @@ public class LoginSignup {
         Scanner sc = new Scanner(System.in);
         String temp="";
 
-        System.out.println("type your unique user Id:");
+        System.out.println("Type your unique user Id:");
         userId = sc.nextLine();
+        setUserName(userId);
         System.out.println("Type password:");
         pwd=sc.nextLine();
 
@@ -51,9 +53,9 @@ public class LoginSignup {
                         Random rand = new Random();
                         int randomElement = givenList.get(rand.nextInt(givenList.size()));
 
-                        System.out.println("Q:"+ parts[randomElement]);
+                        System.out.println("Question :"+ parts[randomElement]+" ?");
                         //Random gen
-                        System.out.println("A:");
+                        System.out.println("Answer :");
                         String tempAns= sc.nextLine();
                         if(tempAns.equalsIgnoreCase(parts[randomElement+1])){
 
@@ -97,28 +99,29 @@ public class LoginSignup {
         ArrayList<String> ans = new ArrayList<>();
         //userId, password, 3 security ques
         System.out.println("====REGISTER====");
-        System.out.println("type your unique user Id:");
+        System.out.println("Type your unique user Id:");
         userId = sc.nextLine();
+
         System.out.println("Type password:");
         pwd=sc.nextLine();
         pwd = Security.encrypt(pwd);
      //   String sha256hex = org.apache.commons.codec.digest.DigestUtils.sha256Hex(pwd);
-        System.out.println("Q1:");
+        System.out.println("Please enter Q1:");
         que.add(sc.nextLine());
 
-        System.out.println("A1:");
+        System.out.println("Please enter answer for the Question1:");
         ans.add(sc.nextLine());
 
-        System.out.println("Q2:");
+        System.out.println("Please enter Q2:");
         que.add(sc.nextLine());
 
-        System.out.println("A2:");
+        System.out.println("Please enter answer for the Question2:");
         ans.add(sc.nextLine());
 
-        System.out.println("Q3:");
+        System.out.println("Please enter Q3");
         que.add(sc.nextLine());
 
-        System.out.println("A3:");
+        System.out.println("Please enter answer for the Question3:");
         ans.add(sc.nextLine());
 
         File f = new File("./src/main/java/parser/UserData/User_Profile.txt");
@@ -142,7 +145,6 @@ public class LoginSignup {
 
         FileWriter ff = new FileWriter(f);
         BufferedWriter fw = new BufferedWriter(ff);
-        System.out.println(que.size()+"  "+ans.size());
         fw.append(tempp);
         fw.append("{");
         //one users detail
@@ -183,5 +185,13 @@ public class LoginSignup {
         }
         sc.close();
         return false;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

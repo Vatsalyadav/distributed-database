@@ -1,5 +1,10 @@
 package analytics;
+import java.io.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import DiskHandler.DistributedManager;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -28,9 +33,12 @@ public class Analyzor {
         }
         return databaseSet;
     }
+
     public Set<String> getTables() throws FileNotFoundException, IOException, ParseException {
         JSONParser parser = new JSONParser();
-        Object obj = parser.parse(new FileReader(logPath + "/queryLogs.json"));
+        List<String> log = DistributedManager.readFile("", logPath + "/queryLogs.json",
+                "queryLogs.json");
+        Object obj = parser.parse(log.get(0));
         JSONObject logsJsonObject = (JSONObject) obj;
         JSONArray queryLogArray = (JSONArray) logsJsonObject.get("querys");
         Set<String> querySet = new HashSet<String>();
@@ -38,33 +46,45 @@ public class Analyzor {
             JSONObject jsOb = (JSONObject) ob;
             querySet.add((String) jsOb.get("table"));
         }
-        return querySet;
+        return querySet;}
+
+    public void printAnalyse(String userName) throws IOException, ParseException {
+        String vm= "";
+        File file =new File("./instances/local.txt");
+        BufferedReader buffReader=new BufferedReader(new FileReader(file));
+        vm=buffReader.readLine();
+        reportDatasbe(userName,vm);
+        reporTabel("create");
     }
 
     public void reportDatasbe(String user, String vm) throws IOException, ParseException {
         Set<String> databases = getDatabases();
-        FileWriter fileWriter = new FileWriter(path+"/analytics_Database.txt");
+        String result = "";
         for (String database : databases) {
             int numberOfQuerys = countNumberOfQuery(user, database);
-            String result = "user " + user + " submitted " + numberOfQuerys + " queries for " + database + " running on "
-                    + "Virtual Machine" + vm;
-            fileWriter.append(result+"\n");
-            System.out.println(result);
+            result = result+"user " + user + " submitted " + numberOfQuerys + " queries for " + database + " running on "
+                    + "Virtual Machine" + vm+"\n";
+
+            System.out.print(result);
         }
-        fileWriter.close();
+        DistributedManager.writeFile("", path+"/analytics_Database.txt", "analytics_Database.txt", result);
+
     }
 
     public void reporTabel(String sqlType) throws FileNotFoundException, IOException, ParseException {
         Set<String> tables = getTables();
-        FileWriter fileWriter = new FileWriter(path+"/analytics_Tables.txt");
+        String result="";
+
         for (String table : tables) {
             int numberOfSuccessfulQuery = countNumberOfSuccessfulQuery(table, sqlType);
-            String result = "Total " + numberOfSuccessfulQuery + " " + sqlType + " operations are performed on "
-                    + table;
-            fileWriter.append(result+"\n");
-            System.out.println(result);
+            result=result+ "Total " + numberOfSuccessfulQuery + " " + sqlType + " operations are performed on "
+                    + table+"\n";
+            System.out.print(result);
         }
-        fileWriter.close();
+        System.out.println(path+"/analytics_Tables.txt");
+        DistributedManager.writeFile("", path + "/analytics_Tables.txt", "analytics_Tables.txt", result);
+
+
 
     }
 
@@ -78,7 +98,7 @@ public class Analyzor {
         for (Object object : queryArray) {
             JSONObject ob = (JSONObject) object;
             boolean matchTable = ob.get("table").equals(table);
-            boolean isSuccessful = ob.get("isSuccessful").toString().equals("true");
+            boolean isSuccessful = ob.get("isSuccessful").toString().equals("SUCCESS");
             boolean checkType = ob.get("type").equals(sqlType);
             if (matchTable && isSuccessful && checkType) {
                 count++;
@@ -86,6 +106,7 @@ public class Analyzor {
         }
         return count;
     }
+
 
     public int countNumberOfQuery(String user, String database) throws IOException, ParseException {
         int count = 0;

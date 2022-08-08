@@ -1,2 +1,3 @@
-Total 1 CREATE operations are performed on student
-Total 1 CREATE operations are performed on T1
+Total 9 create operations are performed on 
+Total 1 create operations are performed on persons
+

@@ -47,7 +47,7 @@ public class QueryParserExecutor {
 		if (isCreDbQuery(query)) {
 			this.createDatabaseProc = new CreateDatabaseProcessor();
 			createDatabaseProc.parseCreDataQuery(query);
-			System.out.println(createDatabaseProc.toString());
+			System.out.println("Query has been parsed: "+createDatabaseProc.toString());
 		}
 
 		if (query.toLowerCase().contains("create")) {
@@ -55,32 +55,32 @@ public class QueryParserExecutor {
 			createQueryProcessor.parseCreateQuery(query);
 			// create object of createQuery using createQueryProcessor
 			// this.createQuery=new CreateQuery(createQueryProcessor.getColumns(),);
-			System.out.println(createQueryProcessor.toString());
+			System.out.println("Query has been parsed: "+createQueryProcessor.toString());
 		}
 
 		if (query.toLowerCase().contains("insert")) {
 			this.insertQueryProcessor = new InsertQueryProcessor();
 			insertQueryProcessor.parseInsertQuery(query);
-			System.out.println(insertQueryProcessor.toString());
+			System.out.println("Query has been parsed: "+insertQueryProcessor.toString());
 		}
 
 		if (query.toLowerCase().contains("delete")) {
 			this.deleteQueryProcessor = new DeleteQueryProcessor();
 			deleteQueryProcessor.parseDeleteQuery(query);
-			System.out.println(deleteQueryProcessor.toString());
+			System.out.println("Query has been parsed: "+deleteQueryProcessor.toString());
 		}
 		
 		
 		if (query.toLowerCase().contains("select")) {
 			this.selectQueryProcessor = new SelectQueryProcessor();
 			selectQueryProcessor.parseSelectQuery(query);
-			System.out.println(selectQueryProcessor.toString());
+			System.out.println("Query has been parsed: "+selectQueryProcessor.toString());
 		}
 
 		if (query.toLowerCase().contains("use")) {
 			this.useDatabaseQueryProc = new UseDatabaseQueryProc();
 			useDatabaseQueryProc.parseUseQUery(query);
-			System.out.println(useDatabaseQueryProc.toString());
+			System.out.println("Query has been parsed: "+useDatabaseQueryProc.toString());
 		}
 
 
@@ -89,7 +89,7 @@ public class QueryParserExecutor {
 		if (query.toLowerCase().contains("update")) {
 			this.updateQueryProcessor = new UpdateQueryProcessor();
 			updateQueryProcessor.parseUpdateQuery(query);
-			System.out.println(updateQueryProcessor.toString());
+			System.out.println("Query has been parsed: "+updateQueryProcessor.toString());
 		}
 		 
 
@@ -132,5 +132,10 @@ public class QueryParserExecutor {
 	public CreateDatabaseProcessor getCreateDatabaseProc() {
 		return createDatabaseProc;
 	}
+
+	public UpdateQueryProcessor getUpdateQueryProcessor() {
+		return updateQueryProcessor;
+	}
+
 
 }

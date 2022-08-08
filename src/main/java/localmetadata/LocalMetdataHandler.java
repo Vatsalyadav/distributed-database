@@ -13,6 +13,7 @@ import query.container.InsertQuery;
 import query.container.SelectQuery;
 import query.response.Response;
 import query.response.ResponseType;
+import query.transaction.Transaction;
 import utils.UtilsCondition;
 import utils.UtilsConstant;
 import utils.UtilsFileHandler;
@@ -45,7 +46,7 @@ public class LocalMetdataHandler {
             line += UtilsConstant.SEPERATOR;
 
             if (createQuery.getColumns().get(i).equals(createQuery.getForeignKey())) {
-                if (UtilsMetadata.fkRefExists(path + UtilsConstant.PREFIX_LOCAL_METADATA + createQuery.getForeignKeyRefTable() + ".txt", createQuery.getForeignKeyRefCol())) {
+                if (UtilsMetadata.fkRefExists(path + UtilsConstant.PREFIX_LOCAL_METADATA + createQuery.getForeignKeyRefTable() + ".txt", createQuery.getForeignKeyRefCol(), createQuery.getDatabase(), UtilsConstant.PREFIX_LOCAL_METADATA + createQuery.getForeignKeyRefTable() + ".txt")) {
                     line += "FK" +
                             UtilsConstant.SEPERATOR + createQuery.getForeignKeyRefTable() +
                             UtilsConstant.SEPERATOR + createQuery.getForeignKeyRefCol();
@@ -242,6 +243,58 @@ public class LocalMetdataHandler {
         return new Response(ResponseType.SUCCESS,result);
     }
 
+    public static Response executeUpdateQuery(UpdateQuery updateQuery, String path) {
+
+        String fileTablePath = path + UtilsConstant.PREFIX_TABLE + updateQuery.getTableName() + ".txt";
+        String fileMetaPath = path + UtilsConstant.PREFIX_LOCAL_METADATA + updateQuery.getTableName() + ".txt";
+
+        List<Integer> indexOfColumns = new ArrayList<>();
+
+        String result = "";
+
+        int indexOfLHS = -1;
+
+        if(!updateQuery.getColumnInWhere().isEmpty())
+            indexOfLHS = UtilsMetadata.getIndexOfColumnInTable(fileMetaPath , updateQuery.getColumnInWhere(), updateQuery.getDatabase(),UtilsConstant.PREFIX_LOCAL_METADATA + updateQuery.getTableName() + ".txt");
+
+        for(Object col : updateQuery.getColumns())
+        {
+            indexOfColumns.add(UtilsMetadata.getIndexOfColumnInTable(fileMetaPath , (String) col,updateQuery.getDatabase(), UtilsConstant.PREFIX_LOCAL_METADATA + updateQuery.getTableName() + ".txt"));
+        }
+
+        try {
+            List<String> lines = DistributedManager.readFile(updateQuery.getDatabase(),fileTablePath, UtilsConstant.PREFIX_TABLE + updateQuery.getTableName() + ".txt");
+
+            for(String line : lines) {
+                String elements[] = line.split("[|]");
+
+                if(indexOfLHS == -1 || UtilsCondition.evaluateCondition(updateQuery.getWhereCond(), elements[indexOfLHS] , updateQuery.getFactor())) {
+                    for(int i = 0;i < elements.length ; i++) {
+                        if(indexOfColumns.get(0) == i) {
+                            elements[i] = (String) updateQuery.getValues().get(0);
+                        }
+
+                        result += elements[i] + UtilsConstant.SEPERATOR;
+                    }
+                }
+
+                result = result.substring(0,result.length()-1);
+                result += "\n";
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        result = result.substring(0,result.length()-1);
+        try {
+            DistributedManager.writeFile(updateQuery.getDatabase(), fileTablePath, UtilsConstant.PREFIX_TABLE + updateQuery.getTableName() + ".txt", result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Response(ResponseType.SUCCESS,"Records updated");
+    }
+
     public static Response executeDeleteQuery(DeleteQuery deleteQuery, String path) {
 
         String fileTablePath = path + UtilsConstant.PREFIX_TABLE + deleteQuery.getTableName() + ".txt";
@@ -285,6 +338,21 @@ public class LocalMetdataHandler {
         }
 
         return new Response(ResponseType.SUCCESS,"Record(s) deleted");
+    }
+
+
+    public static Response executeTransactionQuery(TransactionQuery transactionQuery, String path) {
+
+//        UtilsConstant.DATABASE_ROOT_FOLDER = "database/temp_";
+        Transaction.autoCommit = false;
+        return new Response(ResponseType.SUCCESS, "Query OK "+UtilsConstant.SEPERATOR + " Transaction Successfully Started!");
+    }
+
+    public static Response executeCommitQuery(CommitQuery commitQuery, String path) {
+
+//        UtilsConstant.DATABASE_ROOT_FOLDER = "database/temp_"; // TODO: Won't work
+        Transaction.autoCommit = true;
+        return new Response(ResponseType.SUCCESS, "Query OK "+UtilsConstant.SEPERATOR + " Transaction Successfully Committed!");
     }
 
 }
